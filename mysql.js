@@ -86,15 +86,21 @@ function runStart() {
 
 function allEmployees() {
   console.log("display all employees from the database");
+  console.log("display all employees from the database");
+  console.log("display all employees from the database");
   runStart();
 }
 
 function departmentEmployees() {
   console.log("display all employees by department");
+  console.log("display all employees by department");
+  console.log("display all employees by department");
   runStart();
 }
 
 function managerEmployees() {
+  console.log("display all managers employees");
+  console.log("display all managers employees");
   console.log("display all managers employees");
   runStart();
 }
@@ -131,7 +137,7 @@ function addEmployee() {
         type: "list",
         message: "Who is the employee's manager?",
         choices: [
-          "Display All Managers From The Database",
+          "Display All Managers From The Database should be an array",
           "THE FOLLOWING UNDER ARE HARD CODED",
           "SALLIE MAE",
           "SVETLENA",
@@ -158,6 +164,7 @@ function removeEmployee() {
       ],
     })
     .then(function (answer) {
+      console.log(answer);
       console.log("removeEmployee success");
       runStart();
     });
@@ -188,6 +195,7 @@ function roleUpdate() {
       },
     ])
     .then(function (answer) {
+      console.log(answer);
       console.log("updated employee");
       runStart();
     });
