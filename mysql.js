@@ -1,3 +1,4 @@
+// *! MAKE SURE THE TABLES ARE POPULATED WITH ALL THE INFO BEFORE STARTING HERE (schema.sql, seeds.sql)
 const mysql = require("mysql");
 const inquirer = require("inquirer");
 
@@ -31,6 +32,7 @@ function runStart() {
         "view all employees by department",
         "view all employees by manager",
         "add employee",
+        "add department",
         "remove employee",
         "update employee role",
         "update employee manager",
@@ -55,6 +57,10 @@ function runStart() {
 
         case "add employee":
           addEmployee();
+          break;
+
+        case "add department":
+          addDepartment();
           break;
 
         case "remove employee":
@@ -152,6 +158,22 @@ function addEmployee() {
     });
 }
 
+//*! LOOK INTO QUERY OF ADDING A NEW DEPARTMENT FROM SQL TO INCORPORATE INTO HERE LOOK AT EXAMPLE 14 WEEK 12
+function addDepartment() {
+  inquirer
+    .prompt({
+      name: "addDepartment",
+      type: "input",
+      message: "What department do you want to add",
+    })
+    .then(function (answer) {
+      console.log(answer);
+      console.log("success! The department was added!");
+      runStart();
+    });
+}
+
+// *! USE THE DELETE FROM THE SCHEMA TO SELECT ALL EMPOLOYEES AND DELETE BY CHOICE USING AN ARRAY POSSIBLY
 function removeEmployee() {
   inquirer
     .prompt({
@@ -201,6 +223,7 @@ function roleUpdate() {
     });
 }
 
+//*! HOW TO DISPLAY ALL EMPLOYEES WITHOUT MANAGER TO BE CHOSEN THEN UPDATE THE CHOSEN EMPLOYEE WITH A NEW MANAGER
 function managerUpdate() {
   inquirer
     .prompt([
@@ -230,6 +253,7 @@ function managerUpdate() {
     });
 }
 
+// *! DISPLAY ALL ROLES START WITH THIS AND USE THE SCHEMA AS REFERENCE USE SQL TO BE ABLE TO TEST ON THERE
 function viewRoles() {
   inquirer
     .prompt({
