@@ -1,6 +1,7 @@
 // *! MAKE SURE THE TABLES ARE POPULATED WITH ALL THE INFO BEFORE STARTING HERE (schema.sql, seeds.sql)
 const mysql = require("mysql");
 const inquirer = require("inquirer");
+const cTable = require("console.table");
 
 const connection = mysql.createConnection({
   host: "localhost",
@@ -91,9 +92,30 @@ function runStart() {
 }
 
 function allEmployees() {
-  console.log("display all employees from the database");
-  console.log("display all employees from the database");
-  console.log("display all employees from the database");
+  var query = `SELECT ALL e.employee_id AS "Employee ID", e.first_name AS "First Name", e.last_name AS "Last Name", title AS "Job-Title", name AS "Department", salary AS "Salary", concat(m.first_name, " ", m.last_name) AS "Manager"
+  FROM employee e
+  INNER JOIN role 
+  USING (role_id)
+  INNER JOIN department
+  USING (department_id)
+  LEFT JOIN employee m 
+  USING (manager_id)
+  ORDER BY e.employee_id;`;
+  connection.query(query, function (err, res) {
+    console.table(
+      [
+        "Employee ID",
+        "First name",
+        "Last name",
+        "Job Title",
+        "Department",
+        "Salary",
+        "Manager",
+      ],
+      res
+    );
+  });
+
   runStart();
 }
 

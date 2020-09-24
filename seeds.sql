@@ -1,7 +1,4 @@
 
-use cms_db;
-
-
 CREATE DATABASE cms_db;
 
 use cms_db;
