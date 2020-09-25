@@ -91,6 +91,7 @@ function runStart() {
     });
 }
 
+// * ADDED IN QUERY
 function allEmployees() {
   var query = `SELECT ALL e.employee_id AS "Employee ID", e.first_name AS "First Name", e.last_name AS "Last Name", title AS "Job-Title", name AS "Department", salary AS "Salary", concat(m.first_name, " ", m.last_name) AS "Manager"
   FROM employee e
@@ -102,23 +103,18 @@ function allEmployees() {
   USING (manager_id)
   ORDER BY e.employee_id;`;
   connection.query(query, function (err, res) {
-    console.table(
-      [
-        "Employee ID",
-        "First name",
-        "Last name",
-        "Job Title",
-        "Department",
-        "Salary",
-        "Manager",
-      ],
-      res
-    );
+    if (err) throw err;
+    console.log(`
+    
+    `);
+    console.table(res);
+    console.log(`Hit up or down (key) to continue`);
   });
 
   runStart();
 }
 
+// * ADDED IN QUERY
 function departmentEmployees() {
   var query = `SELECT name AS "Department", e.employee_id AS "Employee ID", e.first_name AS "First Name", e.last_name AS "Last Name"
   FROM employee e
@@ -128,17 +124,31 @@ function departmentEmployees() {
   USING (department_id)
   ORDER BY department_id;`;
   connection.query(query, function (err, res) {
-    console.table(["name", "employeeId", "FIRST", "LAST"], res);
+    console.log(`
+    
+    `);
+    console.table(res);
     console.log(`Hit up or down (key) to continue`);
   });
 
   runStart();
 }
 
+// * ADDED IN QUERY
 function managerEmployees() {
-  console.log("display all managers employees");
-  console.log("display all managers employees");
-  console.log("display all managers employees");
+  var query = `SELECT ALL concat(m.first_name, " ", m.last_name) AS "Manager"
+  FROM employee e  
+  JOIN employee m
+    ON e.manager_id = m.employee_id;`;
+  connection.query(query, function (err, res) {
+    if (err) throw err;
+    console.log(`
+    
+    `);
+    console.table(res);
+    console.log(`Hit up or down (key) to continue`);
+  });
+
   runStart();
 }
 
@@ -284,27 +294,23 @@ function managerUpdate() {
     });
 }
 
-// *! DISPLAY ALL ROLES START WITH THIS AND USE THE SCHEMA AS REFERENCE USE SQL TO BE ABLE TO TEST ON THERE
+//* ADDED QUERY
 function viewRoles() {
-  inquirer
-    .prompt({
-      name: "viewRoles",
-      type: "list",
-      message: "Here are all the roles in the database.",
-      choices: [
-        "Sales Lead SHOULD BE AN ARRAY FROM THE DATABASE TO ADD AND REMOVE ROLES",
-        "Salesperson",
-        "Lead Engineer",
-        "Software",
-        "Account Manager",
-        "Accountant",
-        "Legal Team Lead",
-      ],
-    })
-    .then(function (answer) {
-      console.log(answer);
-      runStart();
-    });
+  var query = `SELECT ALL title AS "Job-Title", role_id AS "ID", salary AS "Salary", name AS "Department"
+  FROM role
+  JOIN department
+    ON department.department_id = role.department_id
+      ORDER BY role_id;`;
+  connection.query(query, function (err, res) {
+    if (err) throw err;
+    console.log(`
+    
+    `);
+    console.table(res);
+    console.log(`Hit up or down (key) to continue`);
+  });
+
+  runStart();
 }
 
 function addRole() {
