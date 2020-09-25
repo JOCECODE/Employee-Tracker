@@ -66,11 +66,13 @@ REFERENCES employee
 
 
                         -- HOW TO SELECT TABLES FROM MYSQL
-                        SELECT *
-                        FROM role;
-                        SELECT *
-                        FROM department;
-                        SELECT *
-                        FROM employee;
-
+         SELECT ALL e.employee_id, e.first_name, e.last_name, title, name, salary, concat(m.first_name, " ", m.last_name) AS manager
+FROM employee e
+INNER JOIN role 
+USING (role_id)
+INNER JOIN department
+USING (department_id)
+LEFT JOIN employee m 
+USING (manager_id)
+ORDER BY e.employee_id;
 

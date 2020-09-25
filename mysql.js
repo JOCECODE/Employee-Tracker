@@ -120,9 +120,18 @@ function allEmployees() {
 }
 
 function departmentEmployees() {
-  console.log("display all employees by department");
-  console.log("display all employees by department");
-  console.log("display all employees by department");
+  var query = `SELECT name AS "Department", e.employee_id AS "Employee ID", e.first_name AS "First Name", e.last_name AS "Last Name"
+  FROM employee e
+  INNER JOIN role
+  USING (role_id)
+  INNER JOIN department
+  USING (department_id)
+  ORDER BY department_id;`;
+  connection.query(query, function (err, res) {
+    console.table(["name", "employeeId", "FIRST", "LAST"], res);
+    console.log(`Hit up or down (key) to continue`);
+  });
+
   runStart();
 }
 
