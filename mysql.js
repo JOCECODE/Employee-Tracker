@@ -151,8 +151,41 @@ function managerEmployees() {
 
   runStart();
 }
-
+//* CONSOLE.LOG HAS QUERY TO CREATE A NEW EMPLOYEE
+//TODO: LEFT TESTER CODE AND QUERY
 function addEmployee() {
+  let employeeArray = [];
+  let roleArray = [];
+  let tester = [];
+  let tester2 = [];
+  var employeeQuery = `SELECT m.employee_id, concat(m.first_name, " ", m.last_name) AS "Employees"
+  FROM employee e  
+  JOIN employee m
+    ON e.manager_id != m.employee_id
+    ORDER BY employee_id;    `;
+  let roleQuery = `SELECT role_id, title AS Roles FROM role
+  ORDER BY role_id;`;
+
+  // QUERY TO GET ALL EMPLOYEES WITHOUT MANAGER
+  connection.query(employeeQuery, function (err, res) {
+    if (err) throw err;
+
+    for (let index = 0; index < res.length; index++) {
+      employeeArray.push(res[index].Employees);
+      tester.push(res[index]);
+    }
+  });
+
+  // QUERY TO GET ALL ROLES
+  connection.query(roleQuery, function (err, res) {
+    if (err) throw err;
+
+    for (let index = 0; index < res.length; index++) {
+      roleArray.push(res[index].Roles);
+      tester2.push(res[index]);
+    }
+  });
+
   inquirer
     .prompt([
       {
@@ -169,32 +202,26 @@ function addEmployee() {
         name: "roleChoice",
         type: "list",
         message: "What is the employee's role?",
-        choices: [
-          "Sales Lead",
-          "Salesperson",
-          "Lead Engineer",
-          "Software",
-          "Account Manager",
-          "Accountant",
-          "Legal Team Lead",
-        ],
+        choices: roleArray,
       },
       {
         name: "managerChoice",
         type: "list",
         message: "Who is the employee's manager?",
-        choices: [
-          "Display All Managers From The Database should be an array",
-          "THE FOLLOWING UNDER ARE HARD CODED",
-          "SALLIE MAE",
-          "SVETLENA",
-          "Tiger King",
-          "Never Enough",
-          "the stars of the night sky",
-        ],
+        choices: employeeArray,
       },
     ])
     .then(function (answer) {
+      let check = tester2.find((note) => {
+        return note.Roles == answer.roleChoice;
+      });
+
+      let result = tester.find((obj) => {
+        return obj.Employees == answer.managerChoice;
+      });
+      console.log(`SELECT * FROM employee; INSERT INTO employee(first_name, last_name, role_id, manager_id) 
+      VALUE ("${answer.firstName}", "${answer.lastName}", "${check.role_id}", ${result.employee_id});`);
+
       runStart();
     });
 }
@@ -232,7 +259,7 @@ function removeEmployee() {
       runStart();
     });
 }
-
+//! NEED TO DO THIS ONE
 function roleUpdate() {
   inquirer
     .prompt([
@@ -312,7 +339,7 @@ function viewRoles() {
 
   runStart();
 }
-
+//! NEED TO DO THIS ONE
 function addRole() {
   inquirer
     .prompt({
@@ -326,7 +353,7 @@ function addRole() {
       runStart();
     });
 }
-
+//! NEED TO DO THIS ONE
 function removeRole() {
   inquirer
     .prompt({
