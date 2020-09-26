@@ -226,7 +226,7 @@ function addEmployee() {
     });
 }
 
-//*! LOOK INTO QUERY OF ADDING A NEW DEPARTMENT FROM SQL TO INCORPORATE INTO HERE LOOK AT EXAMPLE 14 WEEK 12
+//* QUERY ADDED IN CONSOLE.LOG
 function addDepartment() {
   inquirer
     .prompt({
@@ -235,7 +235,10 @@ function addDepartment() {
       message: "What department do you want to add",
     })
     .then(function (answer) {
-      console.log(answer);
+      console.log(`  INSERT INTO department
+				(name)
+				VALUES
+				("${answer.addDepartment}");`);
       console.log("success! The department was added!");
       runStart();
     });
@@ -341,15 +344,42 @@ function viewRoles() {
 }
 //! NEED TO DO THIS ONE
 function addRole() {
+  departmentArray = [];
+  depCheckerArray = [];
+  var depQuery = `SELECT * FROM department;`;
+    connection.query(depQuery, function (err, res) {
+      if (err) throw err;
+
+      for (let index = 0; index < res.length; index++) {
+        departmentArray.push(res[index].name);
+        depCheckerArray.push(res[index]);
+      }
+    });
+
   inquirer
-    .prompt({
-      name: "addRole",
-      type: "input",
-      message: "What NEW role do you want to add?",
-    })
-    .then(function (answer) {
-      console.log(answer);
-      console.log("successfully added");
+    .prompt([
+      {
+        name: "addRole",
+        type: "input",
+        message: "What is the title of the role you want to add?",
+      },
+      {
+        name: "salary",
+        type: "input",
+        message: "What is the annual salary for this role?"
+      },
+      {
+        name: "departmentChoice",
+        type: "list",
+        message: "Which department does this role belong to?",
+        choices: departmentArray,
+      },
+    ])
+.then(function (answer) {
+      let checker = depCheckerArray.find((dep) => {
+        return dep.name == answer.departmentChoice;
+      });
+      console.log(`INSERT INTO role(title, salary, department_id)VALUES("${answer.addRole}", ${answer.salary}, ${checker.department_id});`);
       runStart();
     });
 }
