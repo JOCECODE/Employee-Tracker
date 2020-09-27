@@ -279,6 +279,35 @@ function removeEmployee() {
 }
 //* ADDED QUERY
 function roleUpdate() {
+  function start() {
+    inquirer
+      .prompt([
+        {
+          name: "roleUpdate",
+          type: "list",
+          message: "Which employee's role do you want to update?",
+          choices: updateChoices,
+        },
+        {
+          name: "roleChoice",
+          type: "list",
+          message: "What role do you want to assign this employee?",
+          choices: roleChoices,
+        },
+      ])
+      .then(function (answer) {
+        let check = allEmployees.find((person) => {
+          return person.Employees == answer.roleUpdate;
+        });
+        let checker = allRoles.find((role) => {
+          return role.title == answer.roleChoice;
+        });
+        console.log(
+          `UPDATE employee SET role_id = ${checker.role_id} WHERE employee_id = ${check.employee_id};`
+        );
+        runStart();
+      });
+  }
   let allEmployees = [];
   let updateChoices = [];
   let roleChoices = [];
@@ -302,38 +331,43 @@ function roleUpdate() {
       roleChoices.push(res[index].title);
       allRoles.push(res[index]);
     }
+    start();
   });
-  inquirer
-    .prompt([
-      {
-        name: "roleUpdate",
-        type: "list",
-        message: "Which employee's role do you want to update?",
-        choices: updateChoices,
-      },
-      {
-        name: "roleChoice",
-        type: "list",
-        message: "What role do you want to assign this employee?",
-        choices: roleChoices,
-      },
-    ])
-    .then(function (answer) {
-      let check = allEmployees.find((person) => {
-        return person.Employees == answer.roleUpdate;
-      });
-      let checker = allRoles.find((role) => {
-        return role.title == answer.roleChoice;
-      });
-      console.log(
-        `UPDATE employee SET role_id = ${checker.role_id} WHERE employee_id = ${check.employee_id};`
-      );
-      runStart();
-    });
 }
 
 //* ADDED QUERY
 function managerUpdate() {
+  function start() {
+    inquirer
+      .prompt([
+        {
+          name: "managerUpdate",
+          type: "list",
+          message: "Which employee's manager do you want to update?",
+          choices: choices,
+        },
+        {
+          name: "managerChoice",
+          type: "list",
+          message:
+            "Which employee do you want to set as the NEW manager for the selected employee?",
+          choices: choices,
+        },
+      ])
+      .then(function (answer) {
+        let employeeManager = allEmployees.find((man) => {
+          return man.Employees == answer.managerUpdate;
+        });
+        let newManager = allEmployees.find((newMan) => {
+          return newMan.Employees == answer.managerChoice;
+        });
+        console.log(
+          `UPDATE employee SET manager_id = ${employeeManager.employee_id} WHERE employee_id = ${newManager.employee_id};`
+        );
+        runStart();
+      });
+  }
+
   let allEmployees = [];
   let choices = [];
   let allQuery = `SELECT employee_id, concat(first_name, " ", last_name) AS "Employees", role_id, manager_id  FROM employee;`;
@@ -344,37 +378,9 @@ function managerUpdate() {
       choices.push(res[index].Employees);
       allEmployees.push(res[index]);
     }
+    start();
   });
-  inquirer
-    .prompt([
-      {
-        name: "managerUpdate",
-        type: "list",
-        message: "Which employee's manager do you want to update?",
-        choices: choices,
-      },
-      {
-        name: "managerChoice",
-        type: "list",
-        message:
-          "Which employee do you want to set as the NEW manager for the selected employee?",
-        choices: choices,
-      },
-    ])
-    .then(function (answer) {
-      let employeeManager = allEmployees.find((man) => {
-        return man.Employees == answer.managerUpdate;
-      });
-      let newManager = allEmployees.find((newMan) => {
-        return newMan.Employees == answer.managerChoice;
-      });
-      console.log(
-        `UPDATE employee SET manager_id = ${employeeManager.employee_id} WHERE employee_id = ${newManager.employee_id};`
-      );
-      runStart();
-    });
 }
-
 //* ADDED QUERY
 function viewRoles() {
   var query = `SELECT ALL title AS "Job-Title", role_id AS "ID", salary AS "Salary", name AS "Department"
