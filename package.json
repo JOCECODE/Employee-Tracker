@@ -2,8 +2,9 @@
   "name": "employee-tracker",
   "version": "1.0.0",
   "description": "This is a command line application to view employees and to update their job information.",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
+    "start": "node server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {

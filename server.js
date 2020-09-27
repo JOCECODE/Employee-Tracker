@@ -59,6 +59,7 @@ function runStart() {
 
         case "add employee":
           addEmployee();
+
           break;
 
         case "add department":
@@ -95,9 +96,8 @@ function runStart() {
     });
 }
 
-// * ADDED IN QUERY
 function allEmployees() {
-  var query = `SELECT ALL e.employee_id AS "Employee ID", e.first_name AS "First Name", e.last_name AS "Last Name", title AS "Job-Title", name AS "Department", salary AS "Salary", concat(m.first_name, " ", m.last_name) AS "Manager"
+  var query = `SELECT e.employee_id AS "Employee ID", e.first_name AS "First Name", e.last_name AS "Last Name", title AS "Job-Title", name AS "Department", salary AS "Salary", manager_id AS "Manager ID"
   FROM employee e
   INNER JOIN role 
   USING (role_id)
@@ -118,7 +118,6 @@ function allEmployees() {
   runStart();
 }
 
-// * ADDED IN QUERY
 function departmentEmployees() {
   var query = `SELECT name AS "Department", e.employee_id AS "Employee ID", e.first_name AS "First Name", e.last_name AS "Last Name"
   FROM employee e
@@ -128,6 +127,7 @@ function departmentEmployees() {
   USING (department_id)
   ORDER BY department_id;`;
   connection.query(query, function (err, res) {
+    if (err) throw err;
     console.log(`
     
     `);
@@ -138,7 +138,6 @@ function departmentEmployees() {
   runStart();
 }
 
-// * ADDED IN QUERY
 function managerEmployees() {
   var query = `SELECT manager_id AS "Manager-ID", employee_id AS "Employee-ID", concat(first_name, " ", last_name) AS "Employee", role_id AS "Role-ID"FROM employee
   ORDER BY manager_id;`;
@@ -153,8 +152,7 @@ function managerEmployees() {
 
   runStart();
 }
-//* CONSOLE.LOG HAS QUERY TO CREATE A NEW EMPLOYEE
-//TODO: LEFT TESTER CODE AND QUERY
+
 function addEmployee() {
   let employeeArray = ["none"];
   let roleArray = [];
@@ -220,22 +218,32 @@ function addEmployee() {
         return obj.Employees == answer.managerChoice;
       });
       if (answer.managerChoice == "none") {
-        console.log(`SELECT * FROM employee; INSERT INTO employee(first_name, last_name, role_id, manager_id) 
-        VALUE ("${answer.firstName}", "${answer.lastName}", "${
+        let newQuery = `INSERT INTO employee(first_name, last_name, role_id, manager_id) 
+        VALUES ("${answer.firstName}", "${answer.lastName}", "${
           check.role_id
-        }", ${null});`);
+        }", ${null});`;
+        connection.query(newQuery, function (err, res) {
+          if (err) throw err;
+        });
+        console.log(
+          `Success! ${answer.firstName} ${answer.lastName} was created successfully!`
+        );
         runStart();
       }
       if (answer.managerChoice !== "none") {
-        console.log(`SELECT * FROM employee; INSERT INTO employee(first_name, last_name, role_id, manager_id) 
-      VALUE ("${answer.firstName}", "${answer.lastName}", "${check.role_id}", ${result.employee_id});`);
-
+        let newQuery = `INSERT INTO employee(first_name, last_name, role_id, manager_id) 
+      VALUES ("${answer.firstName}", "${answer.lastName}", "${check.role_id}", ${result.employee_id})`;
+        connection.query(newQuery, function (err, res) {
+          if (err) throw err;
+        });
+        console.log(
+          `Success! ${answer.firstName} ${answer.lastName} was created successfully!`
+        );
         runStart();
       }
     });
 }
 
-//* QUERY ADDED IN CONSOLE.LOG
 function addDepartment() {
   inquirer
     .prompt({
@@ -244,16 +252,20 @@ function addDepartment() {
       message: "What department do you want to add",
     })
     .then(function (answer) {
-      console.log(`  INSERT INTO department
-				(name)
-				VALUES
-				("${answer.addDepartment}");`);
-      console.log("success! The department was added!");
+      let newQuery = `INSERT INTO department
+      (name)
+      VALUES
+      ("${answer.addDepartment}");`;
+      connection.query(newQuery, function (err, res) {
+        if (err) throw err;
+      });
+      console.log(`${answer.addDepartment} has been added successfully!
+      
+      `);
       runStart();
     });
 }
 
-//* QUERY ADDED IN CONSOLE.LOG
 function removeEmployee() {
   function start() {
     inquirer
@@ -267,8 +279,14 @@ function removeEmployee() {
         let check = allEmployees.find((person) => {
           return person.Employees == answer.removeEmployee;
         });
-        console.log(`DELETE FROM employee
-      WHERE employee_id = ${check.employee_id}`);
+        let newQuery = `DELETE FROM employee
+        WHERE employee_id = ${check.employee_id}`;
+        connection.query(newQuery, function (err, res) {
+          if (err) throw err;
+        });
+        console.log(`${answer.removeEmployee} was deleted successfully!
+        
+        `);
         runStart();
       });
   }
@@ -287,7 +305,7 @@ function removeEmployee() {
     start();
   });
 }
-//* ADDED QUERY
+
 function roleUpdate() {
   function start() {
     inquirer
@@ -312,9 +330,13 @@ function roleUpdate() {
         let checker = allRoles.find((role) => {
           return role.title == answer.roleChoice;
         });
-        console.log(
-          `UPDATE employee SET role_id = ${checker.role_id} WHERE employee_id = ${check.employee_id};`
-        );
+        let newQuery = `UPDATE employee SET role_id = ${checker.role_id} WHERE employee_id = ${check.employee_id};`;
+        connection.query(newQuery, function (err, res) {
+          if (err) throw err;
+        });
+        console.log(`${answer.roleUpdate} has been updated SUCCESSFULLY!
+        
+        `);
         runStart();
       });
   }
@@ -345,7 +367,6 @@ function roleUpdate() {
   });
 }
 
-//* ADDED QUERY
 function managerUpdate() {
   function start() {
     inquirer
@@ -371,8 +392,15 @@ function managerUpdate() {
         let newManager = allEmployees.find((newMan) => {
           return newMan.Employees == answer.managerChoice;
         });
+        let newQuery = `UPDATE employee SET manager_id = ${employeeManager.employee_id} WHERE employee_id = ${newManager.employee_id};`;
+        connection.query(newQuery, function (err, res) {
+          if (err) throw err;
+        });
         console.log(
-          `UPDATE employee SET manager_id = ${employeeManager.employee_id} WHERE employee_id = ${newManager.employee_id};`
+          `${answer.managerUpdate} has been updated SUCCESSFULLY!
+          
+
+          `
         );
         runStart();
       });
@@ -391,9 +419,9 @@ function managerUpdate() {
     start();
   });
 }
-//* ADDED QUERY
+
 function viewRoles() {
-  var query = `SELECT ALL title AS "Job-Title", role_id AS "ID", salary AS "Salary", name AS "Department"
+  var query = `SELECT title AS "Job-Title", role_id AS "ID", salary AS "Salary", name AS "Department"
   FROM role
   JOIN department
     ON department.department_id = role.department_id
@@ -409,7 +437,7 @@ function viewRoles() {
 
   runStart();
 }
-//*
+
 function addRole() {
   departmentArray = [];
   depCheckerArray = [];
@@ -445,13 +473,17 @@ function addRole() {
       let checker = depCheckerArray.find((dep) => {
         return dep.name == answer.departmentChoice;
       });
-      console.log(
-        `INSERT INTO role(title, salary, department_id)VALUES("${answer.addRole}", ${answer.salary}, ${checker.department_id});`
-      );
+      let newQuery = `INSERT INTO role(title, salary, department_id)VALUES("${answer.addRole}", ${answer.salary}, ${checker.department_id});`;
+      connection.query(newQuery, function (err, res) {
+        if (err) throw err;
+      });
+      console.log(`Success! ${answer.addRole} has been added!
+      
+      `);
       runStart();
     });
 }
-//* ADDED QUERY
+
 function removeRole() {
   function begin() {
     inquirer
@@ -463,17 +495,29 @@ function removeRole() {
       })
 
       .then(function (answer) {
-        console.log(`DELETE FROM role WHERE title = "${answer.removeRole}";`);
+        let checker = roleChecker.find((dep) => {
+          return dep.title == answer.removeRole;
+        });
+        let newQuery = `DELETE FROM role WHERE role_id = ${checker.id};`;
+        connection.query(newQuery, function (err, res) {
+          if (err) throw err;
+        });
+        console.log(`"${answer.removeRole}" has been deleted!
+        
+
+
+        `);
         runStart();
       });
   }
-
+  let roleChecker = [];
   let arrayChoice = [];
-  var roleQuery = `SELECT role_id AS ID, title FROM role;`;
+  var roleQuery = `SELECT role_id AS id, title FROM role;`;
   connection.query(roleQuery, function (err, res) {
     if (err) throw err;
     for (let index = 0; index < res.length; index++) {
       arrayChoice.push(res[index].title);
+      roleChecker.push(res[index]);
     }
     begin();
   });

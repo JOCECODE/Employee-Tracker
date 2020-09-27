@@ -21,9 +21,8 @@ PRIMARY KEY
         ("GARDEN"),
         ("MEN'S APPAREL"),
         ("WOMEN'S APPAREL");
-    SELECT *
-    FROM department;
-    -- DELETE FROM department WHERE departmentid = 1;
+
+
 
 
 
@@ -46,8 +45,7 @@ REFERENCES department
         (departmentid)
 );
 
-        SELECT *
-        FROM role;
+
 
         INSERT INTO role
             (title, salary, department_id)
@@ -71,7 +69,7 @@ REFERENCES department
             ("retail-organizer", 29999, 6),
             ("line-cook", 34898, 2);
 
-        -- DELETE FROM role WHERE roleid = 1;
+
 
 
         CREATE TABLE employee
@@ -130,9 +128,8 @@ REFERENCES employee
                 ("Fuscia", "Cabinet", 12, NULL),
                 ("Anne", "Perkins", 13, NULL);
 
-            -- DELETE FROM employee WHERE employeeid = 1;
 
 
 
-            SELECT *
-            FROM employee;
+
+        
