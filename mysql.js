@@ -140,10 +140,8 @@ function departmentEmployees() {
 
 // * ADDED IN QUERY
 function managerEmployees() {
-  var query = `SELECT ALL concat(m.first_name, " ", m.last_name) AS "Manager"
-  FROM employee e  
-  JOIN employee m
-    ON e.manager_id = m.employee_id;`;
+  var query = `SELECT manager_id AS "Manager-ID", employee_id AS "Employee-ID", concat(first_name, " ", last_name) AS "Employee", role_id AS "Role-ID"FROM employee
+  ORDER BY manager_id;`;
   connection.query(query, function (err, res) {
     if (err) throw err;
     console.log(`
@@ -158,7 +156,7 @@ function managerEmployees() {
 //* CONSOLE.LOG HAS QUERY TO CREATE A NEW EMPLOYEE
 //TODO: LEFT TESTER CODE AND QUERY
 function addEmployee() {
-  let employeeArray = [];
+  let employeeArray = ["none"];
   let roleArray = [];
   let tester = [];
   let tester2 = [];
@@ -221,10 +219,19 @@ function addEmployee() {
       let result = tester.find((obj) => {
         return obj.Employees == answer.managerChoice;
       });
-      console.log(`SELECT * FROM employee; INSERT INTO employee(first_name, last_name, role_id, manager_id) 
+      if (answer.managerChoice == "none") {
+        console.log(`SELECT * FROM employee; INSERT INTO employee(first_name, last_name, role_id, manager_id) 
+        VALUE ("${answer.firstName}", "${answer.lastName}", "${
+          check.role_id
+        }", ${null});`);
+        runStart();
+      }
+      if (answer.managerChoice !== "none") {
+        console.log(`SELECT * FROM employee; INSERT INTO employee(first_name, last_name, role_id, manager_id) 
       VALUE ("${answer.firstName}", "${answer.lastName}", "${check.role_id}", ${result.employee_id});`);
 
-      runStart();
+        runStart();
+      }
     });
 }
 
@@ -248,6 +255,23 @@ function addDepartment() {
 
 //* QUERY ADDED IN CONSOLE.LOG
 function removeEmployee() {
+  function start() {
+    inquirer
+      .prompt({
+        name: "removeEmployee",
+        type: "list",
+        message: "Which employee do you want to remove?",
+        choices: removeChoices,
+      })
+      .then(function (answer) {
+        let check = allEmployees.find((person) => {
+          return person.Employees == answer.removeEmployee;
+        });
+        console.log(`DELETE FROM employee
+      WHERE employee_id = ${check.employee_id}`);
+        runStart();
+      });
+  }
   let allEmployees = [];
   let removeChoices = [];
   var allQuery = `SELECT employee_id, concat(first_name, " ", last_name) AS "Employees"
@@ -260,22 +284,8 @@ function removeEmployee() {
       removeChoices.push(res[index].Employees);
       allEmployees.push(res[index]);
     }
+    start();
   });
-  inquirer
-    .prompt({
-      name: "removeEmployee",
-      type: "list",
-      message: "Which employee do you want to remove?",
-      choices: removeChoices,
-    })
-    .then(function (answer) {
-      let check = allEmployees.find((person) => {
-        return person.Employees == answer.removeEmployee;
-      });
-      console.log(`DELETE FROM employee
-      WHERE employee_id = ${check.employee_id}`);
-      runStart();
-    });
 }
 //* ADDED QUERY
 function roleUpdate() {
