@@ -40,6 +40,7 @@ function runStart() {
         "view all roles",
         "add role",
         "remove role",
+        "--EXIT--",
       ],
     })
     .then(function (answer) {
@@ -87,6 +88,9 @@ function runStart() {
         case "remove role":
           removeRole();
           break;
+
+        case "--EXIT--":
+          connection.end();
       }
     });
 }
@@ -158,11 +162,9 @@ function addEmployee() {
   let roleArray = [];
   let tester = [];
   let tester2 = [];
-  var employeeQuery = `SELECT m.employee_id, concat(m.first_name, " ", m.last_name) AS "Employees"
-  FROM employee e  
-  JOIN employee m
-    ON e.manager_id != m.employee_id
-    ORDER BY employee_id;    `;
+  var employeeQuery = `SELECT m.employee_id, concat(m.first_name, " ", m.last_name) AS "Employees", role_id, manager_id
+  FROM employee m
+  ORDER BY employee_id;`;
   let roleQuery = `SELECT role_id, title AS Roles FROM role
   ORDER BY role_id;`;
 
@@ -244,82 +246,131 @@ function addDepartment() {
     });
 }
 
-// *! USE THE DELETE FROM THE SCHEMA TO SELECT ALL EMPOLOYEES AND DELETE BY CHOICE USING AN ARRAY POSSIBLY
+//* QUERY ADDED IN CONSOLE.LOG
 function removeEmployee() {
+  let allEmployees = [];
+  let removeChoices = [];
+  var allQuery = `SELECT employee_id, concat(first_name, " ", last_name) AS "Employees"
+  FROM employee 
+    ORDER BY employee_id;`;
+  connection.query(allQuery, function (err, res) {
+    if (err) throw err;
+
+    for (let index = 0; index < res.length; index++) {
+      removeChoices.push(res[index].Employees);
+      allEmployees.push(res[index]);
+    }
+  });
   inquirer
     .prompt({
       name: "removeEmployee",
       type: "list",
-      message: "Who is the employee's manager?",
-      choices: [
-        "there should be an array with all employees from the database",
-        "after selecting a choice, console log confirmation",
-      ],
+      message: "Which employee do you want to remove?",
+      choices: removeChoices,
     })
     .then(function (answer) {
-      console.log(answer);
-      console.log("removeEmployee success");
+      let check = allEmployees.find((person) => {
+        return person.Employees == answer.removeEmployee;
+      });
+      console.log(`DELETE FROM employee
+      WHERE employee_id = ${check.employee_id}`);
       runStart();
     });
 }
-//! NEED TO DO THIS ONE
+//* ADDED QUERY
 function roleUpdate() {
+  let allEmployees = [];
+  let updateChoices = [];
+  let roleChoices = [];
+  let allRoles = [];
+  let allQuery = `SELECT employee_id, concat(first_name, " ", last_name) AS "Employees"
+  FROM employee 
+    ORDER BY employee_id;`;
+  let roleQuery = `SELECT * FROM role;`;
+  connection.query(allQuery, function (err, res) {
+    if (err) throw err;
+
+    for (let index = 0; index < res.length; index++) {
+      updateChoices.push(res[index].Employees);
+      allEmployees.push(res[index]);
+    }
+  });
+  connection.query(roleQuery, function (err, res) {
+    if (err) throw err;
+
+    for (let index = 0; index < res.length; index++) {
+      roleChoices.push(res[index].title);
+      allRoles.push(res[index]);
+    }
+  });
   inquirer
     .prompt([
       {
         name: "roleUpdate",
         type: "list",
         message: "Which employee's role do you want to update?",
-        choices: ["there should be an array", "of all employees"],
+        choices: updateChoices,
       },
       {
         name: "roleChoice",
         type: "list",
         message: "What role do you want to assign this employee?",
-        choices: [
-          "Sales Lead",
-          "Salesperson",
-          "Lead Engineer",
-          "Software",
-          "Account Manager",
-          "Accountant",
-          "Legal Team Lead",
-        ],
+        choices: roleChoices,
       },
     ])
     .then(function (answer) {
-      console.log(answer);
-      console.log("updated employee");
+      let check = allEmployees.find((person) => {
+        return person.Employees == answer.roleUpdate;
+      });
+      let checker = allRoles.find((role) => {
+        return role.title == answer.roleChoice;
+      });
+      console.log(
+        `UPDATE employee SET role_id = ${checker.role_id} WHERE employee_id = ${check.employee_id};`
+      );
       runStart();
     });
 }
 
-//*! HOW TO DISPLAY ALL EMPLOYEES WITHOUT MANAGER TO BE CHOSEN THEN UPDATE THE CHOSEN EMPLOYEE WITH A NEW MANAGER
+//* ADDED QUERY
 function managerUpdate() {
+  let allEmployees = [];
+  let choices = [];
+  let allQuery = `SELECT employee_id, concat(first_name, " ", last_name) AS "Employees", role_id, manager_id  FROM employee;`;
+  connection.query(allQuery, function (err, res) {
+    if (err) throw err;
+
+    for (let index = 0; index < res.length; index++) {
+      choices.push(res[index].Employees);
+      allEmployees.push(res[index]);
+    }
+  });
   inquirer
     .prompt([
       {
         name: "managerUpdate",
         type: "list",
         message: "Which employee's manager do you want to update?",
-        choices: [
-          "should display an array of all manager's from the database",
-          "then the next",
-        ],
+        choices: choices,
       },
       {
         name: "managerChoice",
         type: "list",
         message:
-          "Which employee do you want to set as manager for the selected employee?",
-        choices: [
-          "should be an array",
-          "of employees not as a manger currently",
-        ],
+          "Which employee do you want to set as the NEW manager for the selected employee?",
+        choices: choices,
       },
     ])
     .then(function (answer) {
-      console.log(answer);
+      let employeeManager = allEmployees.find((man) => {
+        return man.Employees == answer.managerUpdate;
+      });
+      let newManager = allEmployees.find((newMan) => {
+        return newMan.Employees == answer.managerChoice;
+      });
+      console.log(
+        `UPDATE employee SET manager_id = ${employeeManager.employee_id} WHERE employee_id = ${newManager.employee_id};`
+      );
       runStart();
     });
 }
@@ -342,20 +393,19 @@ function viewRoles() {
 
   runStart();
 }
-//! NEED TO DO THIS ONE
+//*
 function addRole() {
   departmentArray = [];
   depCheckerArray = [];
   var depQuery = `SELECT * FROM department;`;
-    connection.query(depQuery, function (err, res) {
-      if (err) throw err;
+  connection.query(depQuery, function (err, res) {
+    if (err) throw err;
 
-      for (let index = 0; index < res.length; index++) {
-        departmentArray.push(res[index].name);
-        depCheckerArray.push(res[index]);
-      }
-    });
-
+    for (let index = 0; index < res.length; index++) {
+      departmentArray.push(res[index].name);
+      depCheckerArray.push(res[index]);
+    }
+  });
   inquirer
     .prompt([
       {
@@ -366,7 +416,7 @@ function addRole() {
       {
         name: "salary",
         type: "input",
-        message: "What is the annual salary for this role?"
+        message: "What is the annual salary for this role?",
       },
       {
         name: "departmentChoice",
@@ -375,34 +425,40 @@ function addRole() {
         choices: departmentArray,
       },
     ])
-.then(function (answer) {
+    .then(function (answer) {
       let checker = depCheckerArray.find((dep) => {
         return dep.name == answer.departmentChoice;
       });
-      console.log(`INSERT INTO role(title, salary, department_id)VALUES("${answer.addRole}", ${answer.salary}, ${checker.department_id});`);
+      console.log(
+        `INSERT INTO role(title, salary, department_id)VALUES("${answer.addRole}", ${answer.salary}, ${checker.department_id});`
+      );
       runStart();
     });
 }
-//! NEED TO DO THIS ONE
+//* ADDED QUERY
 function removeRole() {
-  inquirer
-    .prompt({
-      name: "removeRole",
-      type: "list",
-      message: "What role do you want to remove?",
-      choices: [
-        "Sales Lead SHOULD BE AN ARRAY FROM THE DATABASE TO ADD AND REMOVE ROLES",
-        "Salesperson",
-        "Lead Engineer",
-        "Software",
-        "Account Manager",
-        "Accountant",
-        "Legal Team Lead",
-      ],
-    })
-    .then(function (answer) {
-      console.log(answer);
-      console.log("successfully removed");
-      runStart();
-    });
+  function begin() {
+    inquirer
+      .prompt({
+        name: "removeRole",
+        type: "list",
+        message: "What role do you want to remove?",
+        choices: arrayChoice,
+      })
+
+      .then(function (answer) {
+        console.log(`DELETE FROM role WHERE title = "${answer.removeRole}";`);
+        runStart();
+      });
+  }
+
+  let arrayChoice = [];
+  var roleQuery = `SELECT role_id AS ID, title FROM role;`;
+  connection.query(roleQuery, function (err, res) {
+    if (err) throw err;
+    for (let index = 0; index < res.length; index++) {
+      arrayChoice.push(res[index].title);
+    }
+    begin();
+  });
 }
