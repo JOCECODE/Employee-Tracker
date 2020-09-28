@@ -3,6 +3,7 @@ const mysql = require("mysql");
 const inquirer = require("inquirer");
 const cTable = require("console.table");
 
+// CONNECTION MADE TO MYSQL FOR DATABASE
 const connection = mysql.createConnection({
   host: "localhost",
 
@@ -13,7 +14,7 @@ const connection = mysql.createConnection({
   user: "root",
 
   // Your password
-  password: "5531",
+  password: "", // USER PASSWORD HERE
   database: "cms_db",
 });
 
@@ -22,6 +23,7 @@ connection.connect(function (err) {
   runStart();
 });
 
+//RECURSIVE PROMPT SEQUENCE TO ASK USER A LIST OF COMMANDS
 function runStart() {
   inquirer
     .prompt({
@@ -95,9 +97,9 @@ function runStart() {
       }
     });
 }
-
+// FUNCTION TO VIEW ALL EMPLOYEES
 function allEmployees() {
-  var query = `SELECT e.employee_id AS "Employee ID", e.first_name AS "First Name", e.last_name AS "Last Name", title AS "Job-Title", name AS "Department", salary AS "Salary", manager_id AS "Manager ID"
+  let query = `SELECT e.employee_id AS "Employee ID", e.first_name AS "First Name", e.last_name AS "Last Name", title AS "Job-Title", name AS "Department", salary AS "Salary", manager_id AS "Manager ID"
   FROM employee e
   INNER JOIN role 
   USING (role_id)
@@ -117,7 +119,7 @@ function allEmployees() {
 
   runStart();
 }
-
+// DISPLAY ALL EMPLOYEES BY DEPARTMENT
 function departmentEmployees() {
   var query = `SELECT name AS "Department", e.employee_id AS "Employee ID", e.first_name AS "First Name", e.last_name AS "Last Name"
   FROM employee e
@@ -137,7 +139,7 @@ function departmentEmployees() {
 
   runStart();
 }
-
+// DISPLAY ALL EMPLOYEES BY MANAGER
 function managerEmployees() {
   var query = `SELECT manager_id AS "Manager-ID", employee_id AS "Employee-ID", concat(first_name, " ", last_name) AS "Employee", role_id AS "Role-ID"FROM employee
   ORDER BY manager_id;`;
@@ -152,7 +154,7 @@ function managerEmployees() {
 
   runStart();
 }
-
+// ADD A NEW EMPLOYEE
 function addEmployee() {
   let employeeArray = ["none"];
   let roleArray = [];
@@ -210,10 +212,11 @@ function addEmployee() {
       },
     ])
     .then(function (answer) {
+      // CHECKS TO FIND ID
       let check = tester2.find((note) => {
         return note.Roles == answer.roleChoice;
       });
-
+      //      CHECKS TO FIND ID
       let result = tester.find((obj) => {
         return obj.Employees == answer.managerChoice;
       });
@@ -243,7 +246,7 @@ function addEmployee() {
       }
     });
 }
-
+// FUNCTION TO ADD A NEW DEPARTMENT
 function addDepartment() {
   inquirer
     .prompt({
@@ -265,7 +268,7 @@ function addDepartment() {
       runStart();
     });
 }
-
+// FUNCTION TO REMOVE AN EXISTING EMPLOYEE
 function removeEmployee() {
   function start() {
     inquirer
@@ -305,7 +308,7 @@ function removeEmployee() {
     start();
   });
 }
-
+// FUNCTION TO UPDATE AN EMPLOYEES CURRENT ROLE
 function roleUpdate() {
   function start() {
     inquirer
@@ -366,7 +369,7 @@ function roleUpdate() {
     start();
   });
 }
-
+// FUNCTION TO UPDATE AN EMPLOYEE'S CURRENT MANAGER
 function managerUpdate() {
   function start() {
     inquirer
@@ -419,7 +422,7 @@ function managerUpdate() {
     start();
   });
 }
-
+// DISPLAY ALL EXISTING ROLES
 function viewRoles() {
   var query = `SELECT title AS "Job-Title", role_id AS "ID", salary AS "Salary", name AS "Department"
   FROM role
@@ -483,7 +486,7 @@ function addRole() {
       runStart();
     });
 }
-
+// FUNCTION TO REMOVE AN EXISTING ROLE
 function removeRole() {
   function begin() {
     inquirer
