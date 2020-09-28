@@ -1,4 +1,4 @@
-# Note-Taker
+# Employee-Tracker
 
 [![MIT License](https://img.shields.io/apm/l/atomic-design-ui.svg?)](https://github.com/tterb/atomic-design-ui/blob/master/LICENSEs)
 
@@ -24,15 +24,16 @@ Screenshots:
 
 ## Description
 
-In this application you can delete, view, and update employee information. By using inquire and following the commands the user can find the actions they want by cycling though the choices and selecting enter.
+In this application, the user is able to keep track of all their employee's information
+such as role (job title), name, and personal ID number. It is used through the user's terminal and using mysql a database for the information to be saved.
 
 ## User-Story
 
 ```
 As a business owner,
-I WANT TO VIEW ALL EMPLOYEES
-ROLES, MANAGER, NAME, AND ID
-THEN, BE ABLE TO DELETE AND UPDATE INFORMATION.
+I want to be able to keep track
+OF MY EMPLOYEES JOB, ROLE, AND
+NAME.
 ```
 
 ## Installation&Usage
@@ -41,12 +42,13 @@ THEN, BE ABLE TO DELETE AND UPDATE INFORMATION.
 - Must have inquirer
   - to install [inquirer](https://www.npmjs.com/package/inquirer) run the following code in your terminal:
     `npm i inquirer`
-    - to install [inquirer](https://www.npmjs.com/package/console.table) run the following code in your terminal:
+    - to install [console.table](https://www.npmjs.com/package/console.table) run the following code in your terminal:
       `npm i console.table`
-    - to install [inquirer](https://www.npmjs.com/package/mysql) run the following code in your terminal:
+    - to install [mysql](https://www.npmjs.com/package/mysql) run the following code in your terminal:
       `npm i mysql`
 - User-Flow
-  - Using the _server.js_ as a an entry point then running `node server.js` on the terminal will start the application. The application starts. From there, the user can cycle through a list of commands that can `add delete or view employees and roles`
+  - Using the _server.js_ as a an entry point then running `node server.js` on the terminal will start the application. The application starts. From there, the user can cycle through a list of commands that can `add delete or view employees and roles` as
+    see pleased. Before running the application use the `schema.sql` and `seeds.sql` to create the database and tables needed to hold the information.
 
 ## License
 
