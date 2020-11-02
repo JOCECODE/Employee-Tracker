@@ -1,4 +1,3 @@
-// *! MAKE SURE THE TABLES ARE POPULATED WITH ALL THE INFO BEFORE STARTING HERE (schema.sql, seeds.sql)
 const mysql = require("mysql");
 const inquirer = require("inquirer");
 const cTable = require("console.table");
@@ -14,7 +13,7 @@ const connection = mysql.createConnection({
   user: "root",
 
   // Your password
-  password: "", // USER PASSWORD HERE
+  password: "5531", // USER PASSWORD HERE
   database: "cms_db",
 });
 
@@ -440,7 +439,7 @@ function viewRoles() {
 
   runStart();
 }
-
+// FUNCTION TO ADD A NEW ROLE TO THE DATABASE
 function addRole() {
   departmentArray = [];
   depCheckerArray = [];
@@ -496,7 +495,7 @@ function removeRole() {
         message: "What role do you want to remove?",
         choices: arrayChoice,
       })
-
+// CHECKS IF THE SELECTED ROLES ID MATCHES WITH THE DATABASE ID
       .then(function (answer) {
         let checker = roleChecker.find((dep) => {
           return dep.title == answer.removeRole;

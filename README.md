@@ -1,6 +1,16 @@
+<body style="background-color: rgb(35,35,35); font-family: Times New Roman; font-size: 16px;>
+
+<div style="color: yellow;">
+
 # Employee-Tracker
 
-[![MIT License](https://img.shields.io/apm/l/atomic-design-ui.svg?)](https://github.com/tterb/atomic-design-ui/blob/master/LICENSEs)
+</div>
+
+<div style="text-align: left;">
+
+![GitHub](https://img.shields.io/github/license/JOCECODE/PucMan_Chase?style=plastic) ![GitHub All Releases](https://img.shields.io/github/downloads/JOCECODE/PucMan_Chase/total?logo=Github&style=plastic) ![GitHub commit activity](https://img.shields.io/github/commit-activity/m/JOCECODE/PucMan_Chase?color=dodgerblue&logo=github&style=plastic)
+
+</div>
 
 ## Table Of Contents
 
@@ -38,17 +48,20 @@ NAME.
 
 ## Installation&Usage
 
-- Must download and install [Node](https://nodejs.org/en/download/)
-- Must have inquirer
-  - to install [inquirer](https://www.npmjs.com/package/inquirer) run the following code in your terminal:
-    `npm i inquirer`
-    - to install [console.table](https://www.npmjs.com/package/console.table) run the following code in your terminal:
-      `npm i console.table`
-    - to install [mysql](https://www.npmjs.com/package/mysql) run the following code in your terminal:
-      `npm i mysql`
-- User-Flow
-  - Using the _server.js_ as a an entry point then running `node server.js` on the terminal will start the application. The application starts. From there, the user can cycle through a list of commands that can `add delete or view employees and roles` as
-    see pleased. Before running the application use the `schema.sql` and `seeds.sql` to create the database and tables needed to hold the information.
+Must download and install [Node](https://nodejs.org/en/download/)
+
+Must install the following NPM packages:
+
+- to install [inquirer](https://www.npmjs.com/package/inquirer) run the following code in your terminal:
+  `npm i inquirer`
+- to install [console.table](https://www.npmjs.com/package/console.table) run the following code in your terminal:
+  `npm i console.table`
+- to install [mysql](https://www.npmjs.com/package/mysql) run the following code in your terminal:
+  `npm i mysql`
+
+User-Flow
+
+- Using the _server.js_ as a an entry point run `npm start` on the terminal to start the application. From there, the user is than shown there last workout and can either continue it or make a new one.
 
 ## License
 
@@ -72,10 +85,14 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
-## Questions
+## Contact-Info
 
-GitHub: https://github.com/JOCECODE
+_<strong style="font-size: 22px;">Jose Ulices Perez Jr.</strong>_
 
-Email: jocecode27@gmail.com
+<strong style="color: palegoldenrod;">GitHub:</strong> https://github.com/JOCECODE
 
-Feel free to email me with any questions with the application or troubleshooting. Provide your name and or contact info and I will get back to you ASAP.
+<strong style="color: palegoldenrod;">Email:</strong> jocecode27@gmail.com
+
+Feel free to email the team with any questions with the application or troubleshooting. Provide your name and or contact info and we will get back to you ASAP.
+
+</body>

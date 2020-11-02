@@ -1,17 +1,4 @@
 
-CREATE DATABASE cms_db;
-
-use cms_db;
-
-CREATE TABLE department
-(
-    departmentid INT NOT NULL
-    AUTO_INCREMENT,
-name VARCHAR
-    (30) NOT NULL,
-PRIMARY KEY
-    (departmentid)
-);
     INSERT INTO department
         (name)
     VALUES
@@ -21,31 +8,6 @@ PRIMARY KEY
         ("GARDEN"),
         ("MEN'S APPAREL"),
         ("WOMEN'S APPAREL");
-
-
-
-
-
-
-
-    CREATE TABLE role
-    (
-        roleid INT NOT NULL
-        AUTO_INCREMENT,
-title VARCHAR
-        (30) NOT NULL,
-salary DECIMAL
-        (9,2) NOT NULL,
-department_id INT NOT NULL,
-PRIMARY KEY
-        (roleid),
-CONSTRAINT FK_DepartmentRole FOREIGN KEY
-        (department_id)
-REFERENCES department
-        (departmentid)
-);
-
-
 
         INSERT INTO role
             (title, salary, department_id)
@@ -68,31 +30,6 @@ REFERENCES department
             ("electrician", 47890, 2),
             ("retail-organizer", 29999, 6),
             ("line-cook", 34898, 2);
-
-
-
-
-        CREATE TABLE employee
-        (
-            employeeid INT NOT NULL
-            AUTO_INCREMENT,
-first_name VARCHAR
-            (30) NOT NULL,
-last_name VARCHAR
-            (30) NOT NULL,
-role_id INT NOT NULL,
-manager_id INT,
-PRIMARY KEY
-            (employeeid),
-CONSTRAINT FK_RoleEmployee FOREIGN KEY
-            (role_id)
-REFERENCES role
-            (roleid),
-CONSTRAINT FK_ManagerEmployee FOREIGN KEY
-            (manager_id) 
-REFERENCES employee
-            (employeeid))
-;
 
             INSERT INTO employee
                 (first_name, last_name, role_id, manager_id)
@@ -127,9 +64,3 @@ REFERENCES employee
                 ("Theodore", "Armstrong", 11, NULL),
                 ("Fuscia", "Cabinet", 12, NULL),
                 ("Anne", "Perkins", 13, NULL);
-
-
-
-
-
-        
